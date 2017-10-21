@@ -1,0 +1,48 @@
+---
+# tasks file for sssd_ad
+
+- name: Ensure required packages are installed
+  package:
+    name: "{{ sssd_ad_packages }}"
+    state: present
+
+- name: Check if samba 'net' command is available
+  command: "which net" 
+  register: net_avail
+  check_mode: true
+  ignore_errors: true
+  changed_when: false
+
+- name: Set domain registration method to adcli
+  set_fact: sssd_ad_join_method="adcli"
+  when: net_avail|failed
+
+- name: Set domain registration method to samba net
+  set_fact: sssd_ad_join_method="samba"
+  when: net_avail|succeeded
+
+- name: Manage Kerberos configuration
+  template:
+    src: "krb5.conf.j2"
+    dest: "/etc/krb5.conf"
+    mode: 0644
+    owner: root
+    group: root
+
+- name: Manage SSSD configuration
+  template:
+    src: "sssd.conf.j2"
+    dest: "/etc/sssd/sssd.conf"
+    mode: 0600
+    owner: root
+    group: root
+  notify:
+  - restart sssd
+
+- import_tasks: pam_config_ubuntu.yml
+
+- import_tasks: join_with_samba.yml
+  when: sssd_ad_join_method=="samba"
+
+- import_tasks: join_with_adcli.yml
+  when: sssd_ad_join_method=="adcli"

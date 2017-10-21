@@ -1,0 +1,25 @@
+[sssd]
+domains = {{ sssd_ad_domain }}
+config_file_version = 2
+services = nss, pam
+
+[domain/{{ sssd_ad_domain }}]
+ad_domain = {{ sssd_ad_domain }}
+krb5_realm = {{ sssd_ad_realm }}
+ldap_krb5_keytab = /etc/krb5.keytab
+krb5_store_password_if_offline = True
+realmd_tags = manages-system joined-with-{{ sssd_ad_join_method }}
+cache_credentials = True
+default_shell = {{ sssd_ad_default_shell }}
+use_fully_qualified_names = True
+fallback_homedir = {{ sssd_ad_fallback_homedir }}
+use_fully_qualified_names = {{ sssd_ad_use_fully_qualified_names }}
+ldap_schema = ad
+ldap_id_mapping = True
+ldap_idmap_autorid_compat = True
+ldap_idmap_range_min = 20000
+access_provider = ad
+id_provider = ad
+auth_provider = ad
+chpass_provider = ad
+ad_gpo_access_control = permissive
