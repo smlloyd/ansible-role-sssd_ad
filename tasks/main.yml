@@ -9,7 +9,6 @@
 - name: Check if samba 'net' command is available
   command: "which net" 
   register: net_avail
-  check_mode: true
   ignore_errors: true
   changed_when: false
 

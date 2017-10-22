@@ -5,7 +5,6 @@
     name: sssd
     enabled: yes
     state: restarted
-  ignore_errors: true
 
 - name: restart samba
   service:
@@ -13,4 +12,3 @@
     enabled: yes
     state: restarted
   with_items: "{{ sssd_ad_samba_services }}"
-  ignore_errors: true
