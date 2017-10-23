@@ -39,9 +39,13 @@
   - restart sssd
 
 - import_tasks: pam_config_ubuntu.yml
+  when: ansible_distribution == 'Ubuntu'
 
 - import_tasks: join_with_samba.yml
   when: sssd_ad_join_method=="samba"
 
 - import_tasks: join_with_adcli.yml
   when: sssd_ad_join_method=="adcli"
+
+- import_tasks: sudo.yml
+  when: sssd_ad_sudo_group is defined
