@@ -1,0 +1,10 @@
+---
+sssd_ad_packages:
+  - sssd
+  - adcli
+  - ntp
+  - oddjob-mkhomedir
+sssd_ad_samba_services:
+  - smb
+  - nmb
+sssd_ad_sudo_conf_d: /etc/sudoers.d

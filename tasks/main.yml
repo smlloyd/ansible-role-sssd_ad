@@ -1,6 +1,14 @@
 ---
 # tasks file for sssd_ad
 
+- name: Gather os specific variables
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
+    - "{{ ansible_distribution }}.yml"
+    - "{{ ansible_os_family }}.yml"
+  tags: vars
+
 - name: Ensure required packages are installed
   package:
     name: "{{ sssd_ad_packages }}"
@@ -38,8 +46,11 @@
   notify:
   - restart sssd
 
-- import_tasks: pam_config_ubuntu.yml
-  when: ansible_distribution == 'Ubuntu'
+- import_tasks: pam_config_Debian.yml
+  when: ansible_os_family == 'Debian'
+
+- import_tasks: pam_config_RedHat.yml
+  when: ansible_os_family == 'RedHat'
 
 - import_tasks: join_with_samba.yml
   when: sssd_ad_join_method=="samba"

@@ -1,0 +1,10 @@
+---
+sssd_ad_packages:
+  - sssd
+  - krb5-user
+  - adcli
+  - ntp
+sssd_ad_samba_services:
+  - smbd
+  - nmbd
+sssd_ad_sudo_conf_d: /etc/sudoers.d
