@@ -40,7 +40,7 @@
     - ansible_distribution_major_version|int < 8
 
 - name: Join domain with adcli
-  shell: echo -n {{ sssd_ad_password}} | /usr/sbin/adcli join -U {{ sssd_ad_user }} --stdin-password {{ sssd_ad_adcli_options }} -D {{ sssd_ad_domain }}
+  shell: set -o pipefail && echo -n {{ sssd_ad_password }} | /usr/sbin/adcli join -U {{ sssd_ad_user }} --stdin-password {{ sssd_ad_adcli_options }} -D {{ sssd_ad_domain }}
   args:
     creates: /etc/krb5.keytab
   notify:
