@@ -14,20 +14,6 @@
     name: "{{ sssd_ad_packages }}"
     state: present
 
-- name: Check if samba 'net' command is available
-  command: "which net" 
-  register: net_avail
-  ignore_errors: true
-  changed_when: false
-
-- name: Set domain registration method to adcli
-  set_fact: sssd_ad_join_method="adcli"
-  when: net_avail|failed
-
-- name: Set domain registration method to samba net
-  set_fact: sssd_ad_join_method="samba"
-  when: net_avail|succeeded
-
 - name: Manage Kerberos configuration
   template:
     src: "krb5.conf.j2"
@@ -46,17 +32,25 @@
   notify:
   - restart sssd
 
-- import_tasks: pam_config_Debian.yml
-  when: ansible_os_family == 'Debian'
+- name: Update PAM with authconfig
+  shell: authconfig --enablesssdauth --enablesssd --enablemkhomedir --update
+  when:
+    - ansible_os_family == 'RedHat'
+    - ansible_distribution != 'Fedora'
+    - ansible_distribution_major_version|int < 8
 
-- import_tasks: pam_config_RedHat.yml
-  when: ansible_os_family == 'RedHat'
+- name: Join domain with adcli
+  shell: echo -n {{ sssd_ad_password}} | /usr/sbin/adcli join -U {{ sssd_ad_user }} --stdin-password {{ sssd_ad_adcli_options }} -D {{ sssd_ad_domain }}
+  args:
+    creates: /etc/krb5.keytab
+  notify:
+    - restart sssd
 
-- import_tasks: join_with_samba.yml
-  when: sssd_ad_join_method=="samba"
-
-- import_tasks: join_with_adcli.yml
-  when: sssd_ad_join_method=="adcli"
+- name: Enable oddjobd
+  service:
+    name: oddjobd
+    state: started
+    enabled: yes
 
 - import_tasks: sudo.yml
   when: sssd_ad_sudo_group is defined

@@ -1,7 +1,0 @@
-- name: Join domain with samba net tool
-  shell: echo -n {{ sssd_ad_password }} | net ads join -U {{ sssd_ad_user }} -i && echo -n {{ sssd_ad_password }} | net ads keytab create -U {{sssd_ad_user }} -i
-  args:
-    creates: /etc/krb5.keytab
-  notify:
-    - restart sssd
-    - restart samba

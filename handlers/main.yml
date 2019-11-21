@@ -6,9 +6,8 @@
     enabled: yes
     state: restarted
 
-- name: restart samba
+- name: restart oddjobd
   service:
-    name: "{{ item }}"
+    name: oddjobd
     enabled: yes
     state: restarted
-  with_items: "{{ sssd_ad_samba_services }}"
