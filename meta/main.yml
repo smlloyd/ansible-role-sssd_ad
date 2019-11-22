@@ -13,7 +13,7 @@ galaxy_info:
         - all
   galaxy_tags: []
 dependencies:
-  - src: smlloyd/ansible-role-authselect
+  - src: https://github.com/smlloyd/ansible-role-authselect
     name: authselect
     when:
     - ansible_os_family == 'RedHat'
