@@ -33,7 +33,7 @@
   - restart sssd
 
 - name: Update PAM with authconfig
-  shell: authconfig --enablesssdauth --enablesssd --enablemkhomedir --update
+  command: authconfig --enablesssdauth --enablesssd --enablemkhomedir --update
   when:
     - ansible_os_family == 'RedHat'
     - ansible_distribution != 'Fedora'
