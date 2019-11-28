@@ -1,5 +1,6 @@
 galaxy_info:
   author: smlloyd
+  role_name: sssd_ad
   description: Configure sssd for Active Directory
   license: "Beerware License"
   min_ansible_version: 2.7
@@ -13,7 +14,7 @@ galaxy_info:
         - all
   galaxy_tags: []
 dependencies:
-  - src: https://github.com/smlloyd/ansible-role-authselect
+  - src: smlloyd.authselect
     name: authselect
     when:
     - ansible_os_family == 'RedHat'
