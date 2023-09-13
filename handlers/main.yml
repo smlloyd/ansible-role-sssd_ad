@@ -3,11 +3,11 @@
 - name: restart sssd
   service:
     name: sssd
-    enabled: yes
+    enabled: true
     state: restarted
 
 - name: restart oddjobd
   service:
     name: oddjobd
-    enabled: yes
+    enabled: true
     state: restarted
