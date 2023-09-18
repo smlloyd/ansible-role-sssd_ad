@@ -6,5 +6,5 @@ sssd_ad_user: changeme
 sssd_ad_password: changeme
 sssd_ad_default_shell: /bin/bash
 sssd_ad_fallback_homedir: /home/%u
-sssd_ad_use_fully_qualified_names: False
+sssd_ad_use_fully_qualified_names: "False"
 sssd_ad_adcli_options: ""
