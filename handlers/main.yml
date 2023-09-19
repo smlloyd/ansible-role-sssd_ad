@@ -1,13 +1,13 @@
 ---
 # handlers file for sssd_ad
 - name: restart sssd
-  service:
+  ansible.builtin.service:
     name: sssd
     enabled: true
     state: restarted
 
 - name: restart oddjobd
-  service:
+  ansible.builtin.service:
     name: oddjobd
     enabled: true
     state: restarted
