@@ -1,5 +1,10 @@
 ---
 # handlers file for sssd_ad
+- name: update pam
+  ansible.builtin.command: "{{ sssd_update_pam_command }}"
+  changed_when: true
+  when: sssd_update_pam_command is defined
+
 - name: restart sssd
   ansible.builtin.service:
     name: sssd

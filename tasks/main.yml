@@ -13,6 +13,8 @@
   ansible.builtin.package:
     name: "{{ sssd_ad_packages }}"
     state: present
+  notify:
+    - update pam
 
 - name: Manage Kerberos configuration
   ansible.builtin.template:
@@ -32,13 +34,6 @@
   notify:
     - restart sssd
 
-- name: Update PAM with authconfig
-  ansible.builtin.command: authconfig --enablesssdauth --enablesssd --enablemkhomedir --update
-  when:
-    - ansible_os_family == 'RedHat'
-    - ansible_distribution != 'Fedora'
-    - ansible_distribution_major_version|int < 8
-
 - name: Fix hosts line in /etc/nsswitch.conf
   ansible.builtin.lineinfile:
     path: /etc/nsswitch.conf
@@ -47,18 +42,15 @@
   when:
     - ansible_os_family == 'Debian'
 
-- name: Manage PAM configuration
+- name: PAM mkhomedir configuration
   ansible.builtin.template:
     src: mkhomedir.j2
     dest: /usr/share/pam-configs/mkhomedir
     mode: "0644"
     owner: root
     group: root
-  when:
-    - ansible_os_family == 'Debian'
-
-- name: Run pam-auth-update
-  ansible.builtin.command: "pam-auth-update --enable mkhomedir"
+  notify:
+    - update pam
   when:
     - ansible_os_family == 'Debian'
 
