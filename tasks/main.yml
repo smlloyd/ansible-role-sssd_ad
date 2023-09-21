@@ -62,6 +62,12 @@
   notify:
     - restart sssd
 
+- name: Enable sssd
+  ansible.builtin.service:
+    name: sssd
+    state: started
+    enabled: true
+
 - name: Enable oddjobd
   ansible.builtin.service:
     name: oddjobd

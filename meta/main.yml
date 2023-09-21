@@ -18,8 +18,8 @@ galaxy_info:
         - "30"
         - "31"
   galaxy_tags: []
-dependencies:
-  - src: smlloyd.authselect
-    when:
-      - ansible_os_family == 'RedHat'
-      - ansible_distribution_major_version|int >= 8
+dependencies: []
+  ## - src: smlloyd.authselect
+  ## when:
+  ## - ansible_os_family == 'RedHat'
+  ## - ansible_distribution_major_version|int >= 8

@@ -8,3 +8,5 @@ sssd_ad_default_shell: /bin/bash
 sssd_ad_fallback_homedir: /home/%u
 sssd_ad_use_fully_qualified_names: "False"
 sssd_ad_adcli_options: ""
+sssd_dyndns_update: false
+sssd_ad_sudo_permissions: "ALL=(ALL:ALL) ALL"

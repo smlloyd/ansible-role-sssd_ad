@@ -1,2 +1,2 @@
 # Allow members of group {{ sssd_ad_sudo_group }} to execute any command
-%{{ sssd_ad_sudo_group }} ALL=(ALL:ALL) ALL
+%{{ sssd_ad_sudo_group }} {{ sssd_ad_sudo_permissions }}

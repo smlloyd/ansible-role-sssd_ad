@@ -4,18 +4,20 @@ config_file_version = 2
 services = nss, pam
 
 [domain/{{ sssd_ad_domain }}]
-ad_domain = {{ sssd_ad_domain }}
-krb5_realm = {{ sssd_ad_realm }}
-cache_credentials = True
-id_provider = ad
 access_provider = ad
-krb5_store_password_if_offline = True
+ad_domain = {{ sssd_ad_domain }}
+cache_credentials = True
 default_shell = {{ sssd_ad_default_shell }}
+dyndns_update = {{ sssd_dyndns_update }}
 fallback_homedir = {{ sssd_ad_fallback_homedir }}
-use_fully_qualified_names = {{ sssd_ad_use_fully_qualified_names }}
+id_provider = ad
+krb5_realm = {{ sssd_ad_realm }}
+krb5_store_password_if_offline = True
 ldap_id_mapping = True
 ldap_idmap_autorid_compat = True
 ldap_idmap_range_min = 20000
+ldap_user_principal = nosuchattribute
+use_fully_qualified_names = {{ sssd_ad_use_fully_qualified_names }}
 {% if sssd_ad_gpo_map_remote_interactive is defined %}
 ad_gpo_map_remote_interactive = {{ sssd_ad_gpo_map_remote_interactive }}
 {% endif %}
