@@ -2,7 +2,7 @@
 # tasks file for sssd_ad
 
 - name: Gather os specific variables
-  include_vars: "{{ item }}"
+  ansible.builtin.include_vars: "{{ item }}"
   with_first_found:
     - "{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
     - "{{ ansible_distribution }}.yml"
@@ -10,12 +10,14 @@
   tags: vars
 
 - name: Ensure required packages are installed
-  package:
+  ansible.builtin.package:
     name: "{{ sssd_ad_packages }}"
     state: present
+  notify:
+    - update pam
 
 - name: Manage Kerberos configuration
-  template:
+  ansible.builtin.template:
     src: "krb5.conf.j2"
     dest: "/etc/krb5.conf"
     mode: "0644"
@@ -23,7 +25,7 @@
     group: root
 
 - name: Manage SSSD configuration
-  template:
+  ansible.builtin.template:
     src: "sssd.conf.j2"
     dest: "/etc/sssd/sssd.conf"
     mode: "0600"
@@ -31,13 +33,6 @@
     group: root
   notify:
     - restart sssd
-
-- name: Update PAM with authconfig
-  command: authconfig --enablesssdauth --enablesssd --enablemkhomedir --update
-  when:
-    - ansible_os_family == 'RedHat'
-    - ansible_distribution != 'Fedora'
-    - ansible_distribution_major_version|int < 8
 
 - name: Fix hosts line in /etc/nsswitch.conf
   ansible.builtin.lineinfile:
@@ -47,18 +42,15 @@
   when:
     - ansible_os_family == 'Debian'
 
-- name: Manage PAM configuration
-  template:
+- name: PAM mkhomedir configuration
+  ansible.builtin.template:
     src: mkhomedir.j2
     dest: /usr/share/pam-configs/mkhomedir
     mode: "0644"
     owner: root
     group: root
-  when:
-    - ansible_os_family == 'Debian'
-
-- name: Run pam-auth-update
-  ansible.builtin.command: "pam-auth-update --enable mkhomedir"
+  notify:
+    - update pam
   when:
     - ansible_os_family == 'Debian'
 
@@ -70,12 +62,18 @@
   notify:
     - restart sssd
 
+- name: Enable sssd
+  ansible.builtin.service:
+    name: sssd
+    state: started
+    enabled: true
+
 - name: Enable oddjobd
-  service:
+  ansible.builtin.service:
     name: oddjobd
     state: started
     enabled: true
 
 - name: Configure sudo
-  import_tasks: sudo.yml
+  ansible.builtin.import_tasks: sudo.yml
   when: sssd_ad_sudo_group is defined

@@ -5,3 +5,4 @@ sssd_ad_packages:
   - oddjob
   - oddjob-mkhomedir
 sssd_ad_sudo_conf_d: /etc/sudoers.d
+sssd_update_pam_command: "authconfig --enablesssdauth --enablesssd --enablemkhomedir --update"

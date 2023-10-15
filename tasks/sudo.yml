@@ -1,6 +1,6 @@
 ---
 - name: sudo | Add admin group to sudo
-  template:
+  ansible.builtin.template:
     src: sudoers.j2
     dest: "{{ sssd_ad_sudo_conf_d }}/sssd_ad"
     validate: 'visudo -cf %s'

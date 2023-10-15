@@ -1,13 +1,18 @@
 ---
 # handlers file for sssd_ad
 - name: restart sssd
-  service:
+  ansible.builtin.service:
     name: sssd
     enabled: true
     state: restarted
 
+- name: update pam
+  ansible.builtin.command: "{{ sssd_update_pam_command }}"
+  changed_when: true
+  when: sssd_update_pam_command is defined
+
 - name: restart oddjobd
-  service:
+  ansible.builtin.service:
     name: oddjobd
     enabled: true
     state: restarted
